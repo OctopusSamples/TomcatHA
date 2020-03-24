@@ -10,8 +10,8 @@ package { 'tomcat9':
   lens     => "Xml.lns",
   changes   => [
     "defnode conn Connector[#attribute/protocol='AJP/1.3']",
-    "set $conn/#attribute/port='8009'",
-    "set $conn/#attribute/redirectPort='8443'"
+    "set \$conn/#attribute/port='8009'",
+    "set \$conn/#attribute/redirectPort='8443'"
   ]
 }
 -> file_line { 'Change Tomcat Port':
