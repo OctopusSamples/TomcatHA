@@ -6,12 +6,11 @@ package { 'tomcat9':
 }
 -> augeas {'server.xml':
   incl     =>  '/etc/tomcat9/server.xml',
-  context  =>  "/files/etc/tomcat9/server.xml/Server/Service",
+  context  =>  "/files/etc/tomcat9/server.xml/Server/Service/Connector[#attribute/protocol='AJP/1.3']",
   lens     => "Xml.lns",
   changes   => [
-    "defnode conn Connector[#attribute/protocol='AJP/1.3'] ''",
-    "set \$conn/#attribute/port '8009'",
-    "set \$conn/#attribute/redirectPort '8443'"
+    "set #attribute/port '8009'",
+    "set #attribute/redirectPort '8443'"
   ]
 }
 -> file_line { 'Add Tomcat User':
