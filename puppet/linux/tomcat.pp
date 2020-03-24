@@ -9,7 +9,7 @@ package { 'tomcat9':
   context  =>  "/files/etc/tomcat9/server.xml/Server/Service",
   lens     => "Xml.lns",
   changes   => [
-    "defnode conn Connector[#attribute/protocol='AJP/1.3']",
+    "defnode conn Connector[#attribute/protocol='AJP/1.3'] ''",
     "set \$conn/#attribute/port='8009'",
     "set \$conn/#attribute/redirectPort='8443'"
   ]
