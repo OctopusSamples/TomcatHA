@@ -4,14 +4,13 @@ package { 'tomcat9':
 -> package { 'tomcat9-admin':
   ensure => installed,
 }
--> augeas {'server.xml':
-  incl     =>  '/etc/tomcat9/server.xml',
-  context  =>  "/files/etc/tomcat9/server.xml/Server/Service/Connector[#attribute/protocol='AJP/1.3']",
-  lens     => "Xml.lns",
-  changes   => [
-    "set #attribute/port '8009'",
-    "set #attribute/redirectPort '8443'"
-  ]
+-> tomcat::config::server::connector { 'tomcat9':
+  catalina_base         => '/etc/tomcat9',
+  port                  => '8009',
+  protocol              => 'AJP/1.3',
+  additional_attributes => {
+    'redirectPort' => '8443'
+  },
 }
 -> file_line { 'Add Tomcat User':
   path    => '/etc/tomcat9/tomcat-users.xml',
