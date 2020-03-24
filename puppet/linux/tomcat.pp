@@ -28,3 +28,7 @@ package { 'tomcat9':
   replace => true,
   notify  => Service['tomcat9']
 }
+
+service {'tomcat9':
+  ensure => running
+}
