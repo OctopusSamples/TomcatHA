@@ -14,13 +14,6 @@ package { 'tomcat9':
     "set \$conn/#attribute/redirectPort='8443'"
   ]
 }
--> file_line { 'Change Tomcat Port':
-  path    => '/etc/tomcat9/server.xml',
-  line    => '    <Connector port="9091" protocol="HTTP/1.1"',
-  match   => '^\s*<Connector\ port\="8080"\ protocol\="HTTP/1.1"',
-  replace => true,
-  notify  => Service['tomcat9']
-}
 -> file_line { 'Add Tomcat User':
   path    => '/etc/tomcat9/tomcat-users.xml',
   line    => '<role rolename="manager-gui"/><role rolename="manager-script"/><user username="tomcat" password="Password01!" roles="manager-script,manager-gui"/></tomcat-users>',
