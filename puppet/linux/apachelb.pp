@@ -24,10 +24,11 @@ package { 'apache2':
   group   => 'root',
   mode    => '0755',
   content => @(EOT)
+    Listen 80
     <VirtualHost *:80>
       ErrorLog ${APACHE_LOG_DIR}/error.log
       CustomLog ${APACHE_LOG_DIR}/access.log combined
       JkMount /* worker1
-    </VirtualHost *:80>
+    </VirtualHost>
     | EOT
 }
