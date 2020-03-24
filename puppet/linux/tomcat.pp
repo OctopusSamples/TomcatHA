@@ -5,7 +5,7 @@ package { 'tomcat9':
   ensure => installed,
 }
 -> tomcat::config::server::connector { 'tomcat9-ajp':
-  catalina_base         => '/etc/tomcat9/',
+  catalina_base         => '/var/lib/tomcat9',
   port                  => '8009',
   protocol              => 'AJP/1.3',
   additional_attributes => {
