@@ -11,11 +11,17 @@ package { 'apache2':
   mode    => '0755',
   content => @(EOT)
     # Define 1 real worker using ajp13
-    worker.list=worker1
+    worker.list=loadbalancer
+
     # Set properties for worker (ajp13)
     worker.worker1.type=ajp13
     worker.worker1.host=localhost
     worker.worker1.port=8009
+
+    # Load-balancing behaviour
+    worker.loadbalancer.type=lb
+    worker.loadbalancer.balance_workers=worker1
+    worker.loadbalancer.sticky_session=1
     | EOT
 }
 -> file { '/etc/apache2/sites-enabled/000-default.conf':

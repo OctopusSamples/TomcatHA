@@ -13,6 +13,13 @@ package { 'tomcat9':
   },
 }
 -> file_line { 'Add Tomcat User':
+  path    => '/etc/tomcat9/server.xml',
+  line    => '    <Engine defaultHost="localhost" name="Catalina" jvmRoute="worker1">',
+  match   => '\s*<Engine defaultHost="localhost" name="Catalina">',
+  replace => true,
+  notify  => Service['tomcat9']
+}
+-> file_line { 'Add Tomcat User':
   path    => '/etc/tomcat9/tomcat-users.xml',
   line    => '<role rolename="manager-gui"/><role rolename="manager-script"/><user username="tomcat" password="Password01!" roles="manager-script,manager-gui"/></tomcat-users>',
   match   => '^</tomcat-users>',
