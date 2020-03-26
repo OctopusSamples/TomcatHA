@@ -1,0 +1,221 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  KeyPair:
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: DukeLegion
+  InstanceTypeParameter:
+    Type: String
+    Default: t3.small
+    AllowedValues:
+      - t3.small
+      - t3.micro
+    Description: Enter instance size.
+  AMI:
+    Type: String
+    Default: ami-0fc61db8544a617ed
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      InstanceTenancy: default
+      Tags:
+        -
+          Key: Name
+          Value: Tomcat HA VPC
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+  VPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+  SubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: us-east-1a
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.0.0/24
+      MapPublicIpOnLaunch: true
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+  InternetRoute:
+    Type: AWS::EC2::Route
+    DependsOn: InternetGateway
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+      RouteTableId: !Ref RouteTable
+  SubnetARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref RouteTable
+      SubnetId: !Ref SubnetA
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable Web access
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          CidrIp: !Sub '${ClientIPAddress}/32'
+        - IpProtocol: tcp
+          FromPort: '8080'
+          ToPort: '8080'
+          CidrIp: !Sub '${ClientIPAddress}/32'
+        - IpProtocol: tcp
+          FromPort: '443'
+          ToPort: '443'
+          CidrIp: !Sub '${ClientIPAddress}/32'
+        - IpProtocol: tcp
+          FromPort: '8443'
+          ToPort: '8443'
+          CidrIp: !Sub '${ClientIPAddress}/32'
+  TomcatSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable Web access
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '8080'
+          ToPort: '8080'
+          CidrIp: !Sub '${ClientIPAddress}/32'
+        - IpProtocol: tcp
+          FromPort: '8009'
+          ToPort: '8009'
+          CidrIp: !Sub '${ClientIPAddress}/32'
+        - IpProtocol: tcp
+          FromPort: '8443'
+          ToPort: '8443'
+          CidrIp: !Sub '${ClientIPAddress}/32'
+  TomcatOneENI:
+    Type: AWS::EC2::NetworkInterface
+    Properties:
+      Description: Tomcat 1 network interface
+      SourceDestCheck: 'false'
+      GroupSet:
+        - Ref: TomcatSecurityGroup
+      SubnetId: !Ref SubnetA
+      PrivateIpAddress: 10.0.0.10
+  TomcatOne:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      NetworkInterfaces:
+        - NetworkInterfaceId: !Ref TomcatOneENI
+          DeviceIndex: 0
+      ImageId: !Ref AMI
+      SubnetId: !Ref SubnetA
+      InstanceType:
+        Ref: InstanceTypeParameter
+      SecurityGroupIds:
+        - Ref: TomcatSecurityGroup
+      KeyName: !Ref KeyPair
+      Tags:
+        -
+          Key: Name
+          Value: "Tomcat 1"
+      UserData:
+        Fn::Base64: !Sub |
+          #cloud-boothook
+          #!/bin/bash
+          sudo yum install git -y
+          git clone https://github.com/mcasperson/TomcatHA.git
+          cd TomcatHA
+          git pull; curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_tomcat_name=worker1 sudo bash -s tomcat.pp
+  TomcatTwoENI:
+    Type: AWS::EC2::NetworkInterface
+    Properties:
+      Description: Tomcat 1 network interface
+      SourceDestCheck: 'false'
+      GroupSet:
+        - Ref: TomcatSecurityGroup
+      SubnetId: !Ref SubnetA
+      PrivateIpAddress: 10.0.0.11
+  TomcatTwo:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      NetworkInterfaces:
+        - NetworkInterfaceId: !Ref TomcatTwoENI
+          DeviceIndex: 0
+      ImageId: !Ref AMI
+      SubnetId: !Ref SubnetA
+      InstanceType:
+        Ref: InstanceTypeParameter
+      SecurityGroupIds:
+        - Ref: TomcatSecurityGroup
+      KeyName: !Ref KeyPair
+      Tags:
+        -
+          Key: Name
+          Value: "Tomcat 2"
+      UserData:
+        Fn::Base64: !Sub |
+          #cloud-boothook
+          #!/bin/bash
+          sudo yum install git -y
+          git clone https://github.com/mcasperson/TomcatHA.git
+          cd TomcatHA
+          git pull; curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_tomcat_name=worker2 sudo bash -s tomcat.pp
+  LoadBalancerOneENI:
+    Type: AWS::EC2::NetworkInterface
+    Properties:
+      Description: Tomcat 1 network interface
+      SourceDestCheck: 'false'
+      GroupSet:
+        - Ref: TomcatSecurityGroup
+      SubnetId: !Ref SubnetA
+      PrivateIpAddress: 10.0.0.20
+  LoadBalancerOne:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      NetworkInterfaces:
+        - NetworkInterfaceId: !Ref LoadBalancerOneENI
+          DeviceIndex: 0
+      ImageId: !Ref AMI
+      SubnetId: !Ref SubnetA
+      InstanceType:
+        Ref: InstanceTypeParameter
+      SecurityGroupIds:
+        - Ref: LoadBalancerSecurityGroup
+      KeyName: !Ref KeyPair
+      Tags:
+        -
+          Key: Name
+          Value: "Apache2 Load Balancer 1"
+      UserData:
+        Fn::Base64: !Sub |
+          #cloud-boothook
+          #!/bin/bash
+          sudo yum install git -y
+          git clone https://github.com/mcasperson/TomcatHA.git
+          cd TomcatHA
+          git pull; curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | sudo bash -s apachelb.pp
+  WebElasticIp:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      InstanceId: !Ref Instance
+  WebElasticIpAssoc:
+    Type: AWS::EC2::EIPAssociation
+    Properties:
+      InstanceId: !Ref 'LoadBalancerOne'
+      EIP: !Ref 'WebElasticIp'
+Outputs:
+  VPCID:
+    Value: !Ref VPC
+    Description: VPC ID
+  SubnetAID:
+    Value: !Ref SubnetA
+    Description: Subnet A ID
+  PublicIp:
+    Value:
+      Fn::GetAtt:
+        - Instance
+        - PublicIp
+    Description: Server's PublicIp Address
