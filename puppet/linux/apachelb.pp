@@ -9,6 +9,7 @@ package { 'apache2':
   owner   => 'root',
   group   => 'root',
   mode    => '0755',
+  notify  => Service['apache2'],
   content => @(EOT)
     # Define 1 real worker using ajp13
     worker.list=loadbalancer
@@ -29,6 +30,7 @@ package { 'apache2':
   owner   => 'root',
   group   => 'root',
   mode    => '0755',
+  notify  => Service['apache2'],
   content => @(EOT)
     <VirtualHost *:80>
       ErrorLog ${APACHE_LOG_DIR}/error.log
@@ -36,4 +38,8 @@ package { 'apache2':
       JkMount /* worker1
     </VirtualHost>
     | EOT
+}
+
+service {'apache2':
+  ensure => running
 }
