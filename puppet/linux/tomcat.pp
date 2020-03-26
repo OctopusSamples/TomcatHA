@@ -12,7 +12,7 @@ package { 'tomcat9':
     'redirectPort' => '8443'
   },
 }
--> file_line { 'Add Tomcat User':
+-> file_line { 'Define Tomcat worker name':
   path    => '/etc/tomcat9/server.xml',
   line    => '    <Engine defaultHost="localhost" name="Catalina" jvmRoute="worker1">',
   match   => '\s*<Engine defaultHost="localhost" name="Catalina">',
