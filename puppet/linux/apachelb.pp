@@ -19,9 +19,13 @@ package { 'apache2':
     worker.worker1.host=172.24.141.93
     worker.worker1.port=8009
 
+    worker.worker2.type=ajp13
+    worker.worker2.host=172.24.137.240
+    worker.worker2.port=8009
+
     # Load-balancing behaviour
     worker.loadbalancer.type=lb
-    worker.loadbalancer.balance_workers=worker1
+    worker.loadbalancer.balance_workers=worker1,worker2
     worker.loadbalancer.sticky_session=1
     | EOT
 }
