@@ -12,7 +12,7 @@ Parameters:
     Description: Enter instance size.
   AMI:
     Type: String
-    Default: ami-0fc61db8544a617ed
+    Default: ami-07ebfd5b3428b6f4d
 Resources:
   VPC:
     Type: AWS::EC2::VPC
