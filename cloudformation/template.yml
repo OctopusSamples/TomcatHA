@@ -113,8 +113,6 @@ Resources:
       ImageId: !Ref AMI
       InstanceType:
         Ref: InstanceTypeParameter
-      SecurityGroupIds:
-        - Ref: TomcatSecurityGroup
       KeyName: !Ref KeyPair
       Tags:
         -
@@ -146,8 +144,6 @@ Resources:
       ImageId: !Ref AMI
       InstanceType:
         Ref: InstanceTypeParameter
-      SecurityGroupIds:
-        - Ref: TomcatSecurityGroup
       KeyName: !Ref KeyPair
       Tags:
         -
@@ -167,7 +163,7 @@ Resources:
       Description: Tomcat 1 network interface
       SourceDestCheck: 'false'
       GroupSet:
-        - Ref: TomcatSecurityGroup
+        - Ref: LoadBalancerSecurityGroup
       SubnetId: !Ref SubnetA
       PrivateIpAddress: 10.0.0.20
   LoadBalancerOne:
@@ -179,8 +175,6 @@ Resources:
       ImageId: !Ref AMI
       InstanceType:
         Ref: InstanceTypeParameter
-      SecurityGroupIds:
-        - Ref: LoadBalancerSecurityGroup
       KeyName: !Ref KeyPair
       Tags:
         -
