@@ -1,4 +1,9 @@
-package { 'apache2':
+$apache_server = $::operatingsystem ? {
+  Ubuntu  => 'apache2',
+  default => 'httpd',
+}
+
+package { $apache_server:
   ensure => installed
 }
 -> package { 'libapache2-mod-jk':
