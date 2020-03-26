@@ -15,7 +15,7 @@ package { 'tomcat9':
 -> file_line { 'Define Tomcat worker name':
   path    => '/etc/tomcat9/server.xml',
   line    => "    <Engine defaultHost=\"localhost\" name=\"Catalina\" jvmRoute=\"$tomcat_name\">",
-  match   => '\s*<Engine.*?name="Catalina".*?>',
+  match   => '\s*(<Engine defaultHost="localhost" name="Catalina">|<Engine name="Catalina" defaultHost="localhost">)',
   replace => true,
   notify  => Service['tomcat9']
 }
