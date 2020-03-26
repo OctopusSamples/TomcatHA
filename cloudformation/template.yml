@@ -111,7 +111,6 @@ Resources:
         - NetworkInterfaceId: !Ref TomcatOneENI
           DeviceIndex: 0
       ImageId: !Ref AMI
-      SubnetId: !Ref SubnetA
       InstanceType:
         Ref: InstanceTypeParameter
       SecurityGroupIds:
@@ -145,7 +144,6 @@ Resources:
         - NetworkInterfaceId: !Ref TomcatTwoENI
           DeviceIndex: 0
       ImageId: !Ref AMI
-      SubnetId: !Ref SubnetA
       InstanceType:
         Ref: InstanceTypeParameter
       SecurityGroupIds:
@@ -179,7 +177,6 @@ Resources:
         - NetworkInterfaceId: !Ref LoadBalancerOneENI
           DeviceIndex: 0
       ImageId: !Ref AMI
-      SubnetId: !Ref SubnetA
       InstanceType:
         Ref: InstanceTypeParameter
       SecurityGroupIds:
