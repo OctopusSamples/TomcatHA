@@ -13,6 +13,7 @@ Parameters:
   AMI:
     Type: String
     Default: ami-0fc61db8544a617ed
+Resources:
   VPC:
     Type: AWS::EC2::VPC
     Properties:
@@ -63,19 +64,19 @@ Parameters:
         - IpProtocol: tcp
           FromPort: '80'
           ToPort: '80'
-          CidrIp: !Sub '${ClientIPAddress}/32'
+          CidrIp: !Sub '0.0.0.0/0'
         - IpProtocol: tcp
           FromPort: '8080'
           ToPort: '8080'
-          CidrIp: !Sub '${ClientIPAddress}/32'
+          CidrIp: !Sub '0.0.0.0/0'
         - IpProtocol: tcp
           FromPort: '443'
           ToPort: '443'
-          CidrIp: !Sub '${ClientIPAddress}/32'
+          CidrIp: !Sub '0.0.0.0/0'
         - IpProtocol: tcp
           FromPort: '8443'
           ToPort: '8443'
-          CidrIp: !Sub '${ClientIPAddress}/32'
+          CidrIp: !Sub '0.0.0.0/0'
   TomcatSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -85,15 +86,15 @@ Parameters:
         - IpProtocol: tcp
           FromPort: '8080'
           ToPort: '8080'
-          CidrIp: !Sub '${ClientIPAddress}/32'
+          CidrIp: !Sub '0.0.0.0/0'
         - IpProtocol: tcp
           FromPort: '8009'
           ToPort: '8009'
-          CidrIp: !Sub '${ClientIPAddress}/32'
+          CidrIp: !Sub '0.0.0.0/0'
         - IpProtocol: tcp
           FromPort: '8443'
           ToPort: '8443'
-          CidrIp: !Sub '${ClientIPAddress}/32'
+          CidrIp: !Sub '0.0.0.0/0'
   TomcatOneENI:
     Type: AWS::EC2::NetworkInterface
     Properties:
@@ -200,12 +201,7 @@ Parameters:
     Type: AWS::EC2::EIP
     Properties:
       Domain: vpc
-      InstanceId: !Ref Instance
-  WebElasticIpAssoc:
-    Type: AWS::EC2::EIPAssociation
-    Properties:
-      InstanceId: !Ref 'LoadBalancerOne'
-      EIP: !Ref 'WebElasticIp'
+      InstanceId: !Ref LoadBalancerOne
 Outputs:
   VPCID:
     Value: !Ref VPC
@@ -216,6 +212,6 @@ Outputs:
   PublicIp:
     Value:
       Fn::GetAtt:
-        - Instance
+        - LoadBalancerOne
         - PublicIp
     Description: Server's PublicIp Address
