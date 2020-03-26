@@ -16,11 +16,11 @@ package { 'apache2':
 
     # Set properties for worker (ajp13)
     worker.worker1.type=ajp13
-    worker.worker1.host=172.24.141.93
+    worker.worker1.host=$worker1_ip
     worker.worker1.port=8009
 
     worker.worker2.type=ajp13
-    worker.worker2.host=172.24.137.240
+    worker.worker2.host=$worker2_ip
     worker.worker2.port=8009
 
     # Load-balancing behaviour

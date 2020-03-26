@@ -195,7 +195,7 @@ Parameters:
           sudo yum install git -y
           git clone https://github.com/mcasperson/TomcatHA.git
           cd TomcatHA
-          git pull; curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | sudo bash -s apachelb.pp
+          git pull; curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_worker1_ip=10.0.0.10 FACTER_worker2_ip=10.0.0.11 sudo bash -s apachelb.pp
   WebElasticIp:
     Type: AWS::EC2::EIP
     Properties:
