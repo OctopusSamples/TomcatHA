@@ -35,7 +35,7 @@ package { 'apache2':
     <VirtualHost *:80>
       ErrorLog ${APACHE_LOG_DIR}/error.log
       CustomLog ${APACHE_LOG_DIR}/access.log combined
-      JkMount /* worker1
+      JkMount /* loadbalancer
     </VirtualHost>
     | EOT
 }
