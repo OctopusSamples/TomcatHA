@@ -218,7 +218,7 @@ Resources:
     Properties:
       GroupName: !Sub 'PostgresSQL Security Group'
       GroupDescription: Security Group which grants anyone access to Postgres
-      VpcId: !Ref VpcId
+      VpcId: !Ref VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 5432
