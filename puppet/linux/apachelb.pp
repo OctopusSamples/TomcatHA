@@ -15,7 +15,7 @@ package { $apache_server:
   group   => 'root',
   mode    => '0755',
   notify  => Service['apache2'],
-  content => @(EOT)
+  content => @("EOT")
     # Define 1 real worker using ajp13
     worker.list=loadbalancer
 
