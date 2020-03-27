@@ -133,7 +133,7 @@ Resources:
           sudo apt-get install git -y
           git clone https://github.com/mcasperson/TomcatHA.git
           cd TomcatHA
-          git pull; curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | sudo FACTER_tomcat_name=worker1 bash -s tomcat.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_tomcat_name=worker1 bash -s tomcat.pp
   TomcatTwoENI:
     Type: AWS::EC2::NetworkInterface
     Properties:
@@ -164,7 +164,7 @@ Resources:
           sudo apt-get install git -y
           git clone https://github.com/mcasperson/TomcatHA.git
           cd TomcatHA
-          git pull; curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | sudo FACTER_tomcat_name=worker2 bash -s tomcat.pp
+          #curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_tomcat_name=worker2 bash -s tomcat.pp
   LoadBalancerOneENI:
     Type: AWS::EC2::NetworkInterface
     Properties:
@@ -195,7 +195,7 @@ Resources:
           sudo apt-get install git -y
           git clone https://github.com/mcasperson/TomcatHA.git
           cd TomcatHA
-          git pull; curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | sudo FACTER_worker1_ip=10.0.0.10 FACTER_worker2_ip=10.0.0.11 bash -s apachelb.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_worker1_ip=10.0.0.10 FACTER_worker2_ip=10.0.0.11 bash -s apachelb.pp
   WebElasticIp:
     Type: AWS::EC2::EIP
     Properties:
