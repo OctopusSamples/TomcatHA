@@ -164,7 +164,7 @@ Resources:
           sudo apt-get install git -y
           git clone https://github.com/mcasperson/TomcatHA.git
           cd TomcatHA
-          #curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_tomcat_name=worker2 bash -s tomcat.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_tomcat_name=worker2 bash -s tomcat.pp
   LoadBalancerOneENI:
     Type: AWS::EC2::NetworkInterface
     Properties:

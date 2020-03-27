@@ -1,5 +1,5 @@
 $apache_server = $::operatingsystem ? {
-  Ubuntu  => 'apache2',
+  'Ubuntu'  => 'apache2',
   default => 'httpd',
 }
 
