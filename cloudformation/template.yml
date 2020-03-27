@@ -128,7 +128,6 @@ Resources:
           Value: "Tomcat 1"
       UserData:
         Fn::Base64: !Sub |
-          #cloud-boothook
           #!/bin/bash
           sudo apt-get install git -y
           git clone https://github.com/mcasperson/TomcatHA.git
@@ -159,7 +158,6 @@ Resources:
           Value: "Tomcat 2"
       UserData:
         Fn::Base64: !Sub |
-          #cloud-boothook
           #!/bin/bash
           sudo apt-get install git -y
           git clone https://github.com/mcasperson/TomcatHA.git
@@ -190,7 +188,6 @@ Resources:
           Value: "Apache2 Load Balancer 1"
       UserData:
         Fn::Base64: !Sub |
-          #cloud-boothook
           #!/bin/bash
           sudo apt-get install git -y
           git clone https://github.com/mcasperson/TomcatHA.git
