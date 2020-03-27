@@ -62,6 +62,10 @@ Resources:
       VpcId: !Ref VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: !Sub '0.0.0.0/0'
+        - IpProtocol: tcp
           FromPort: '80'
           ToPort: '80'
           CidrIp: !Sub '0.0.0.0/0'
@@ -83,6 +87,10 @@ Resources:
       GroupDescription: Enable Web access
       VpcId: !Ref VPC
       SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: !Sub '0.0.0.0/0'
         - IpProtocol: tcp
           FromPort: '8080'
           ToPort: '8080'
