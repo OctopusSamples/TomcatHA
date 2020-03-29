@@ -8,7 +8,7 @@ package { 'postgresql-client':
   owner   => 'root',
   group   => 'root',
   mode    => '0644',
-  content => "SELECT 'CREATE DATABASE tomcat' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'tomcat')\gexec"
+  content => "SELECT 'CREATE DATABASE tomcat' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'tomcat')\\gexec"
 }
 -> file { '/root/initschema.sql':
   ensure  => 'file',
