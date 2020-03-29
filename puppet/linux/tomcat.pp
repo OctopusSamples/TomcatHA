@@ -34,7 +34,7 @@ package { 'tomcat9':
 }
 -> file_line { 'Configure session replication':
   path    => '/etc/tomcat9/context.xml',
-  match   => '</Context>',
+  match   => '^</Context>$',
   replace => true,
   notify  => Service['tomcat9'],
   line    => @("EOT")
