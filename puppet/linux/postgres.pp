@@ -18,15 +18,21 @@ package { 'postgresql-client':
   content => @(EOT)
     CREATE SCHEMA IF NOT EXISTS session;
 
-    CREATE TABLE IF NOT EXISTS session.sessions (
-      session_id     varchar(100) not null primary key,
-      valid_session  char(1) not null,
-      max_inactive   int not null,
-      last_access    bigint not null,
-      app_name       varchar(255),
-      session_data   bytea,
-      KEY kapp_name(app_name)
-    );
+    CREATE TABLE session.tomcat_sessions
+    (
+      session_id character varying(100) NOT NULL,
+      valid_session character(1) NOT NULL,
+      max_inactive integer NOT NULL,
+      last_access bigint NOT NULL,
+      app_name character varying(255),
+      session_data bytea,
+      CONSTRAINT tomcat_sessions_pkey PRIMARY KEY (session_id)
+    )
+
+    CREATE INDEX app_name_index
+      ON session.tomcat_sessions
+      USING btree
+      (app_name);
     | EOT
 }
 -> exec { 'Initialise session database':
