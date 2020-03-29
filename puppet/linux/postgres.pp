@@ -1,15 +1,13 @@
 package { 'postgresql-client':
   ensure => installed,
 }
+# https://stackoverflow.com/a/18389184/157605
 -> file { '/root/initdatabase.sql':
   ensure  => 'file',
   owner   => 'root',
   group   => 'root',
   mode    => '0644',
-  content => @(EOT)
-    SELECT 'CREATE DATABASE tomcat'
-    WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'tomcat')\gexec;
-    | EOT
+  content => "SELECT 'CREATE DATABASE tomcat' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'tomcat')\gexec"
 }
 -> file { '/root/initschema.sql':
   ensure  => 'file',
