@@ -32,7 +32,7 @@ package { 'postgresql-client':
 }
 -> exec { 'Initialise session database':
   environment => ["PGPASSWORD=$postgres_pass"],
-  command   => "/usr/bin/psql -a -U $postgres_user -h $postgres_server -f /root/initdatabase.sql",
+  command   => "/bin/cat /root/initdatabase.sql | /usr/bin/psql -a -U $postgres_user -h $postgres_server",
   logoutput => true
 }
 -> exec { 'Initialise session table':
