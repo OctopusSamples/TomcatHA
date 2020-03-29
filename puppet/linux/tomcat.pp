@@ -46,8 +46,7 @@ package { 'tomcat9':
             sessionAppCol="app_name" sessionDataCol="session_data" sessionIdCol="session_id"
             sessionLastAccessedCol="last_access" sessionMaxInactiveCol="max_inactive"
             sessionTable="session.tomcat_sessions" sessionValidCol="valid_session" />
-    </Manager>
-  </Context>
+    </Manager></Context>
   | EOT
 }
 
