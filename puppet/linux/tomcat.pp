@@ -38,7 +38,7 @@ package { 'tomcat9':
   path     => '/etc/tomcat9/context.xml',
   ensure   => present,
   multiple => false,
-  before   => '^</Context>$',
+  before   => '</Context>',
   replace  => true,
   notify   => Service['tomcat9'],
   line     => @("EOT")
