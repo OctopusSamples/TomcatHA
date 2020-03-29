@@ -1,6 +1,7 @@
 package { 'postgresql-client':
   ensure => installed,
 }
+# Creating an initial database is not quite as easy as it apears
 # https://stackoverflow.com/a/18389184/157605
 -> file { '/root/initdatabase.sql':
   ensure  => 'file',
@@ -23,7 +24,7 @@ package { 'postgresql-client':
       max_inactive   int not null,
       last_access    bigint not null,
       app_name       varchar(255),
-      session_data   mediumblob,
+      session_data   bytea,
       KEY kapp_name(app_name)
     );
     | EOT
