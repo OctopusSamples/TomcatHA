@@ -108,7 +108,7 @@ Resources:
       MultiAZ: false
       VPCSecurityGroups:
         - !Ref PostgresComponentSG
-      PubliclyAccessible: false
+      PubliclyAccessible: true
       DBInstanceIdentifier: !Sub '${AWS::StackName}'
       StorageEncrypted: false
 
