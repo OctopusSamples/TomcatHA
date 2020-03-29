@@ -47,6 +47,7 @@ package { 'tomcat9':
             sessionLastAccessedCol="last_access" sessionMaxInactiveCol="max_inactive"
             sessionTable="session.tomcat_sessions" sessionValidCol="valid_session" />
     </Manager>
+  </Context>
   | EOT
 }
 
