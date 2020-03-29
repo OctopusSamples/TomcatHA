@@ -69,6 +69,49 @@ Resources:
     Properties:
       RouteTableId: !Ref RouteTable
       SubnetId: !Ref SubnetA
+
+  PostgresComponentSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub 'PostgresSQL Security Group'
+      GroupDescription: Security Group which grants anyone access to Postgres
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 5432
+          ToPort: 5432
+          CidrIp: '0.0.0.0/0'
+
+  PostgresSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: !Sub 'Database subnet group for ${AWS::StackName}'
+      SubnetIds:
+        - !Ref SubnetA
+        - !Ref SubnetB
+
+  Postgres:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: 10
+      AllowMajorVersionUpgrade: false
+      AutoMinorVersionUpgrade: true
+      DBSubnetGroupName: !Ref PostgresSubnetGroup
+      Engine: postgres
+      # https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html
+      EngineVersion: "11.6"
+      MasterUsername: "postgres"
+      MasterUserPassword: !Ref PostgresMasterPassword
+      DBName: "postgres"
+      DBInstanceClass: "db.t3.small"
+      BackupRetentionPeriod: 1
+      MultiAZ: false
+      VPCSecurityGroups:
+        - !Ref PostgresComponentSG
+      PubliclyAccessible: false
+      DBInstanceIdentifier: !Sub '${AWS::StackName}'
+      StorageEncrypted: false
+
   LoadBalancerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -213,48 +256,6 @@ Resources:
       Domain: vpc
       InstanceId: !Ref LoadBalancerOne
 
-  PostgresComponentSG:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: !Sub 'PostgresSQL Security Group'
-      GroupDescription: Security Group which grants anyone access to Postgres
-      VpcId: !Ref VPC
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 5432
-          ToPort: 5432
-          CidrIp: '0.0.0.0/0'
-
-  PostgresSubnetGroup:
-    Type: AWS::RDS::DBSubnetGroup
-    Properties:
-      DBSubnetGroupDescription: !Sub 'Database subnet group for ${AWS::StackName}'
-      SubnetIds:
-        - !Ref SubnetA
-        - !Ref SubnetB
-
-  Postgres:
-    Type: AWS::RDS::DBInstance
-    Properties:
-      AllocatedStorage: 10
-      AllowMajorVersionUpgrade: false
-      AutoMinorVersionUpgrade: true
-      DBSubnetGroupName: !Ref PostgresSubnetGroup
-      Engine: postgres
-      # https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html
-      EngineVersion: "11.6"
-      MasterUsername: "postgres"
-      MasterUserPassword: !Ref PostgresMasterPassword
-      DBName: "postgres"
-      DBInstanceClass: "db.t3.small"
-      BackupRetentionPeriod: 1
-      MultiAZ: false
-      VPCSecurityGroups:
-        - !Ref PostgresComponentSG
-      PubliclyAccessible: false
-      DBInstanceIdentifier: !Sub '${AWS::StackName}'
-      StorageEncrypted: false
-
 Outputs:
   VPCID:
     Value: !Ref VPC
@@ -268,3 +269,8 @@ Outputs:
         - LoadBalancerOne
         - PublicIp
     Description: Server's PublicIp Address
+  EndpointAddress:
+    Description: Connection endpoint of the database
+    Value: !GetAtt Postgres.Endpoint.Address
+    Export:
+      Name: !Sub '${AWS::StackName}-EndpointAddress'
