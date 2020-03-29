@@ -27,7 +27,7 @@ package { 'postgresql-client':
       app_name character varying(255),
       session_data bytea,
       CONSTRAINT tomcat_sessions_pkey PRIMARY KEY (session_id)
-    )
+    );
 
     CREATE INDEX app_name_index
       ON session.tomcat_sessions
