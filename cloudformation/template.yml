@@ -189,7 +189,8 @@ Resources:
           sudo apt-get install git -y
           git clone https://github.com/mcasperson/TomcatHA.git
           cd TomcatHA
-          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_tomcat_name=worker1 bash -s tomcat.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_postgres_user=postgres FACTER_postgres_pass=${PostgresMasterPassword} FACTER_postgres_server=${Postgres.Endpoint.Address} bash -s postgres.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_postgres_user=postgres FACTER_postgres_pass=${PostgresMasterPassword} FACTER_postgres_server=${Postgres.Endpoint.Address} FACTER_tomcat_name=worker1 bash -s tomcat.pp
   TomcatTwoENI:
     Type: AWS::EC2::NetworkInterface
     Properties:
@@ -219,7 +220,7 @@ Resources:
           sudo apt-get install git -y
           git clone https://github.com/mcasperson/TomcatHA.git
           cd TomcatHA
-          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_tomcat_name=worker2 bash -s tomcat.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_postgres_user=postgres FACTER_postgres_pass=${PostgresMasterPassword} FACTER_postgres_server=${Postgres.Endpoint.Address} FACTER_tomcat_name=worker2 bash -s tomcat.pp
   LoadBalancerOneENI:
     Type: AWS::EC2::NetworkInterface
     Properties:
