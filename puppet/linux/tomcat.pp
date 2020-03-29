@@ -38,8 +38,7 @@ package { 'tomcat9':
   path     => '/etc/tomcat9/context.xml',
   ensure   => present,
   multiple => false,
-  before   => '</Context>',
-  replace  => true,
+  after    => '<Context>',
   notify   => Service['tomcat9'],
   line     => @("EOT")
     <Manager className="org.apache.catalina.session.PersistentManager" distributable="true"  processExpiresFrequency="3" maxIdleBackup="1" >
