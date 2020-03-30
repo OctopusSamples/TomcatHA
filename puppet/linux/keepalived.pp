@@ -17,7 +17,7 @@ package { 'keepalived':
 #export AWS_SECRET_ACCESS_KEY=
 
 #Set the AWS default region
-export AWS_DEFAULT_REGION=
+export AWS_DEFAULT_REGION=us-east-1
 
 #Set the internal or private DNS names of the HA nodes here
 HA_NODE_1=$lb1_dns
