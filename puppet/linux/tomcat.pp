@@ -40,7 +40,7 @@ package { 'tomcat9':
   multiple => false,
   after    => '<Context>',
   notify   => Service['tomcat9'],
-  line     => "<Manager className=\"org.apache.catalina.session.PersistentManager\" processExpiresFrequency=\"3\" maxIdleBackup=\"1\" ><Store className=\"org.apache.catalina.session.JDBCStore\" driverName=\"org.postgresql.Driver\" connectionURL=\"jdbc:postgresql://$postgres_server:5432/tomcat?currentSchema=session\" connectionName=\"$postgres_user\" connectionPassword=\"$postgres_pass\" sessionAppCol=\"app_name\" sessionDataCol=\"session_data\" sessionIdCol=\"session_id\" sessionLastAccessedCol=\"last_access\" sessionMaxInactiveCol=\"max_inactive\" sessionTable=\"session.tomcat_sessions\" sessionValidCol=\"valid_session\" /><Valve className=\"org.apache.catalina.ha.session.JvmRouteBinderValve\"/></Manager>"
+  line     => "<Manager className=\"org.apache.catalina.session.PersistentManager\" processExpiresFrequency=\"3\" maxIdleBackup=\"1\" ><Store className=\"org.apache.catalina.session.JDBCStore\" driverName=\"org.postgresql.Driver\" connectionURL=\"jdbc:postgresql://$postgres_server:5432/tomcat?currentSchema=session\" connectionName=\"$postgres_user\" connectionPassword=\"$postgres_pass\" sessionAppCol=\"app_name\" sessionDataCol=\"session_data\" sessionIdCol=\"session_id\" sessionLastAccessedCol=\"last_access\" sessionMaxInactiveCol=\"max_inactive\" sessionTable=\"session.tomcat_sessions\" sessionValidCol=\"valid_session\" /></Manager><Valve className=\"org.apache.catalina.ha.session.JvmRouteBinderValve\"/>"
 }
 
 service { 'tomcat9':
