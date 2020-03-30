@@ -8,7 +8,7 @@ package { 'keepalived':
   group   => 'root',
   mode    => '0755',
   notify  => Service['keepalived'],
-  content => @("EOT")
+  content => @("EOT"/$)
 #!/bin/bash
 
 #############--USER DEFINED VARIABLES SET HERE--##############
