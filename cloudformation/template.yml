@@ -15,6 +15,12 @@ Parameters:
     Default: ami-07ebfd5b3428b6f4d
   KeepAlivePassword:
     Type: String
+  LoadBalancer1IP:
+    Type: String
+    Default: 10.0.0.20
+  LoadBalancer2IP:
+    Type: String
+    Default: 10.0.0.21
   PostgresMasterPassword:
     Type: String
     Description: The password for the master user
@@ -25,8 +31,8 @@ Parameters:
 Resources:
 
   # This role allows an EIP address to be reassociated
-  EIPMoveRole:
-    Type: 'AWS::IAM::Role'
+  EIPMovePolicy:
+    Type: 'AWS::IAM::ManagedPolicy'
     Properties:
       PolicyDocument:
         Version: '2012-10-17'
@@ -39,6 +45,21 @@ Resources:
               - 'ec2:DescribeInstances'
               - 'ec2:DescribeAddresses'
               - 'ec2:DisassociateAddress'
+  EIPMoveRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      ManagedPolicyArns:
+        - !Ref EIPMovePolicy
   InstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
@@ -277,7 +298,7 @@ Resources:
           git clone https://github.com/mcasperson/TomcatHA.git
           cd TomcatHA
           curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_worker1_ip=${TomcatOneENI.PrimaryPrivateIpAddress} FACTER_worker2_ip=${TomcatTwoENI.PrimaryPrivateIpAddress} bash -s apachelb.pp
-          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_loadbalancer_name=loadbalancer1 FACTER_loadbalancer_priority=101 FACTER_keepalive_pass=${KeepAlivePassword} FACTER_loadbalancer_ip=${LoadBalancerOneENI.PrimaryPrivateIpAddress} FACTER_other_loadbalancer_ip=${LoadBalancerTwoENI.PrimaryPrivateIpAddress} FACTER_lb1_dns=ip-10-0-0-20.us-east-1.compute.internal FACTER_lb1_dns=ip-10-0-0-21.us-east-1.compute.internal FACTER_eip_allocation=${WebElasticIp.AllocationId} bash -s keepalived.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_loadbalancer_name=loadbalancer1 FACTER_loadbalancer_priority=101 FACTER_keepalive_pass=${KeepAlivePassword} FACTER_loadbalancer_ip=${LoadBalancer1IP} FACTER_other_loadbalancer_ip=${LoadBalancer2IP} FACTER_lb1_dns=ip-10-0-0-20.us-east-1.compute.internal FACTER_lb1_dns=ip-10-0-0-21.us-east-1.compute.internal FACTER_eip_allocation=${WebElasticIp.AllocationId} bash -s keepalived.pp
   LoadBalancerTwoENI:
     Type: AWS::EC2::NetworkInterface
     Properties:
@@ -309,12 +330,11 @@ Resources:
           git clone https://github.com/mcasperson/TomcatHA.git
           cd TomcatHA
           curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_worker1_ip=${TomcatOneENI.PrimaryPrivateIpAddress} FACTER_worker2_ip=${TomcatTwoENI.PrimaryPrivateIpAddress} bash -s apachelb.pp
-          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_loadbalancer_name=loadbalancer2 FACTER_loadbalancer_priority=100 FACTER_keepalive_pass=${KeepAlivePassword} FACTER_loadbalancer_ip=${LoadBalancerTwoENI.PrimaryPrivateIpAddress} FACTER_other_loadbalancer_ip=${LoadBalancerOneENI.PrimaryPrivateIpAddress} FACTER_lb1_dns=ip-10-0-0-20.us-east-1.compute.internal FACTER_lb1_dns=ip-10-0-0-21.us-east-1.compute.internal FACTER_eip_allocation=${WebElasticIp.AllocationId} bash -s keepalived.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_loadbalancer_name=loadbalancer2 FACTER_loadbalancer_priority=100 FACTER_keepalive_pass=${KeepAlivePassword} FACTER_loadbalancer_ip=${LoadBalancer1IP} FACTER_other_loadbalancer_ip=${LoadBalancer2IP} FACTER_lb1_dns=ip-10-0-0-20.us-east-1.compute.internal FACTER_lb1_dns=ip-10-0-0-21.us-east-1.compute.internal FACTER_eip_allocation=${WebElasticIp.AllocationId} bash -s keepalived.pp
   WebElasticIp:
     Type: AWS::EC2::EIP
     Properties:
       Domain: vpc
-      InstanceId: !Ref LoadBalancerOne
 
 Outputs:
   VPCID:
