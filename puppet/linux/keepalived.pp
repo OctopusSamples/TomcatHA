@@ -1,8 +1,11 @@
 package { 'keepalived':
   ensure => installed
 }
+-> file { '/usr/lib/keepalived':
+  ensure => 'directory'
+}
 # https://github.com/nginxinc/aws-ha-elastic-ip
--> file { '/usr/lib/keepalived/nginx-ha-notify':
+-> file { '/usr/lib/keepalived/ha-notify':
   ensure  => 'file',
   owner   => 'root',
   group   => 'root',
@@ -118,7 +121,7 @@ esac
         }
 
         # On AWS this script reassigns an elastic IP. See https://docs.nginx.com/nginx/deployment-guides/amazon-web-services/high-availability-keepalived/
-        notify /usr/lib/keepalived/nginx-ha-notify
+        notify /usr/lib/keepalived/ha-notify
     }
     | EOT
 }
