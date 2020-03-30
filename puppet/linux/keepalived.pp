@@ -1,6 +1,9 @@
 package { 'keepalived':
   ensure => installed
 }
+-> package { 'awscli':
+  ensure => installed
+}
 -> file { '/usr/lib/keepalived':
   ensure => 'directory'
 }
@@ -63,17 +66,16 @@ ASSOCIATION_ID=`aws ec2 describe-addresses --allocation-id \$ALLOCATION_ID | /us
 #Get the INSTANCE_ID of the system the ElasticIP is associated with
 EIP_INSTANCE=`aws ec2 describe-addresses --allocation-id \$ALLOCATION_ID | /usr/bin/python -c 'import json,sys;obj=json.load(sys.stdin); print obj["Addresses"][0]["InstanceId"]'`
 
-STATEFILE=/var/run/nginx-ha-keepalived.state
+STATEFILE=/var/run/ha-keepalived.state
 
-logger -t nginx-ha-keepalived "Params and Values: TYPE=\$TYPE -- NAME=\$NAME -- STATE=\$STATE -- ALLOCATION_ID=\$ALLOCATION_ID -- INSTANCE_ID=\$INSTANCE_ID -- OTHER_INSTANCE_ID=\$OTHER_INSTANCE_ID -- EIP_INSTANCE=\$EIP_INSTANCE -- ASSOCIATION_ID=\$ASSOCIATION_ID -- STATEFILE=\$STATEFILE"
+logger -t ha-keepalived "Params and Values: TYPE=\$TYPE -- NAME=\$NAME -- STATE=\$STATE -- ALLOCATION_ID=\$ALLOCATION_ID -- INSTANCE_ID=\$INSTANCE_ID -- OTHER_INSTANCE_ID=\$OTHER_INSTANCE_ID -- EIP_INSTANCE=\$EIP_INSTANCE -- ASSOCIATION_ID=\$ASSOCIATION_ID -- STATEFILE=\$STATEFILE"
 
-logger -t nginx-ha-keepalived "Transition to state '\$STATE' on VRRP instance '\$NAME'."
+logger -t ha-keepalived "Transition to state '\$STATE' on VRRP instance '\$NAME'."
 
 case \$STATE in
         "MASTER")
                   aws ec2 disassociate-address --association-id \$ASSOCIATION_ID
                   aws ec2 associate-address --allocation-id \$ALLOCATION_ID --instance-id \$INSTANCE_ID
-                  service nginx start ||:
                   echo "STATE=\$STATE" > \$STATEFILE
                   exit 0
                   ;;
@@ -82,12 +84,12 @@ case \$STATE in
                   then
                     aws ec2 disassociate-address --association-id \$ASSOCIATION_ID
                     aws ec2 associate-address --allocation-id \$ALLOCATION_ID --instance-id \$OTHER_INSTANCE_ID
-                    logger -t nginx-ha-keepalived "BACKUP Path Transfer from \$INSTANCE_ID to \$OTHER_INSTANCE_ID"
+                    logger -t ha-keepalived "BACKUP Path Transfer from \$INSTANCE_ID to \$OTHER_INSTANCE_ID"
                   fi
                   echo "STATE=\$STATE" > \$STATEFILE
                   exit 0
                   ;;
-        *)        logger -t nginx-ha-keepalived "Unknown state: '\$STATE'"
+        *)        logger -t ha-keepalived "Unknown state: '\$STATE'"
                   exit 1
                   ;;
 esac
