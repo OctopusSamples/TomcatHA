@@ -10,7 +10,7 @@ package { 'keepalived':
   content => @("EOT")
     vrrp_instance $loadbalancer_name {
         state MASTER
-        interface eth0
+        interface ens5
         virtual_router_id 101
         priority $loadbalancer_priority
         advert_int 1
