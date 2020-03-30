@@ -37,7 +37,7 @@ Resources:
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
-          - Sid: reassign-eip
+          - Sid: ReassignEIP
             Effect: Allow
             Resource: "*"
             Action:
