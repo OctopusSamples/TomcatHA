@@ -112,12 +112,12 @@ esac
           $other_loadbalancer_ip
         }
 
-        # On-premesis, this IP can float within a subnet. On AWS this IP address is not routable without modifying VPC route tables.
+        # On-premises, this IP can float within a subnet. On AWS this IP address is not routable without modifying VPC route tables.
         virtual_ipaddress {
             10.0.0.30
         }
 
-        # On AWS this script reassigns an elastic IP
+        # On AWS this script reassigns an elastic IP. See https://docs.nginx.com/nginx/deployment-guides/amazon-web-services/high-availability-keepalived/
         notify /usr/lib/keepalived/nginx-ha-notify
     }
     | EOT
