@@ -253,7 +253,7 @@ Resources:
           git clone https://github.com/mcasperson/TomcatHA.git
           cd TomcatHA
           curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_worker1_ip=10.0.0.10 FACTER_worker2_ip=10.0.0.11 bash -s apachelb.pp
-          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_loadbalancer_name=loadbalancer1 FACTER_loadbalancer_priority=101 FACTER_keepalive_pass=${KeepAlivePassword} FACTER_loadbalancer_ip=${LoadBalancerOneENI.PrivateIpAddress} FACTER_other_loadbalancer_ip=${LoadBalancerTwoENI.PrivateIpAddress} bash -s keepalived.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_loadbalancer_name=loadbalancer1 FACTER_loadbalancer_priority=101 FACTER_keepalive_pass=${KeepAlivePassword} FACTER_loadbalancer_ip=${LoadBalancerOneENI.PrimaryPrivateIpAddress} FACTER_other_loadbalancer_ip=${LoadBalancerTwoENI.PrimaryPrivateIpAddress} bash -s keepalived.pp
   LoadBalancerTwoENI:
     Type: AWS::EC2::NetworkInterface
     Properties:
@@ -262,7 +262,7 @@ Resources:
       GroupSet:
         - Ref: LoadBalancerSecurityGroup
       SubnetId: !Ref SubnetA
-      PrivateIpAddress: 10.0.0.20
+      PrivateIpAddress: 10.0.0.21
   LoadBalancerTwo:
     Type: 'AWS::EC2::Instance'
     Properties:
@@ -284,7 +284,7 @@ Resources:
           git clone https://github.com/mcasperson/TomcatHA.git
           cd TomcatHA
           curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_worker1_ip=10.0.0.10 FACTER_worker2_ip=10.0.0.11 bash -s apachelb.pp
-          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_loadbalancer_name=loadbalancer2 FACTER_loadbalancer_priority=100 FACTER_keepalive_pass=${KeepAlivePassword} FACTER_loadbalancer_ip=${LoadBalancerTwoENI.PrivateIpAddress} FACTER_other_loadbalancer_ip=${LoadBalancerOneENI.PrivateIpAddress} bash -s keepalived.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_loadbalancer_name=loadbalancer2 FACTER_loadbalancer_priority=100 FACTER_keepalive_pass=${KeepAlivePassword} FACTER_loadbalancer_ip=${LoadBalancerTwoENI.PrimaryPrivateIpAddress} FACTER_other_loadbalancer_ip=${LoadBalancerOneENI.PrimaryPrivateIpAddress} bash -s keepalived.pp
   WebElasticIp:
     Type: AWS::EC2::EIP
     Properties:
