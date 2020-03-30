@@ -23,6 +23,29 @@ Parameters:
     Default: postgres
     NoEcho: true
 Resources:
+
+  # This role allows an EIP address to be reassociated
+  EIPMoveRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: reassign-eip
+            Effect: Allow
+            Resource: "*"
+            Action:
+              - 'ec2:AssociateAddress'
+              - 'ec2:DescribeInstances'
+              - 'ec2:DescribeAddresses'
+              - 'ec2:DisassociateAddress'
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - !Ref EIPMoveRole
+
   VPC:
     Type: AWS::EC2::VPC
     Properties:
@@ -235,6 +258,7 @@ Resources:
   LoadBalancerOne:
     Type: 'AWS::EC2::Instance'
     Properties:
+      IamInstanceProfile: !Ref InstanceProfile
       NetworkInterfaces:
         - NetworkInterfaceId: !Ref LoadBalancerOneENI
           DeviceIndex: 0
@@ -253,7 +277,7 @@ Resources:
           git clone https://github.com/mcasperson/TomcatHA.git
           cd TomcatHA
           curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_worker1_ip=${TomcatOneENI.PrimaryPrivateIpAddress} FACTER_worker2_ip=${TomcatTwoENI.PrimaryPrivateIpAddress} bash -s apachelb.pp
-          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_loadbalancer_name=loadbalancer1 FACTER_loadbalancer_priority=101 FACTER_keepalive_pass=${KeepAlivePassword} FACTER_loadbalancer_ip=${LoadBalancerOneENI.PrimaryPrivateIpAddress} FACTER_other_loadbalancer_ip=${LoadBalancerTwoENI.PrimaryPrivateIpAddress} bash -s keepalived.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_loadbalancer_name=loadbalancer1 FACTER_loadbalancer_priority=101 FACTER_keepalive_pass=${KeepAlivePassword} FACTER_loadbalancer_ip=${LoadBalancerOneENI.PrimaryPrivateIpAddress} FACTER_other_loadbalancer_ip=${LoadBalancerTwoENI.PrimaryPrivateIpAddress} FACTER_lb1_dns=ip-10-0-0-20.us-east-1.compute.internal FACTER_lb1_dns=ip-10-0-0-21.us-east-1.compute.internal FACTER_eip_allocation=${WebElasticIp.AllocationId} bash -s keepalived.pp
   LoadBalancerTwoENI:
     Type: AWS::EC2::NetworkInterface
     Properties:
@@ -266,6 +290,7 @@ Resources:
   LoadBalancerTwo:
     Type: 'AWS::EC2::Instance'
     Properties:
+      IamInstanceProfile: !Ref InstanceProfile
       NetworkInterfaces:
         - NetworkInterfaceId: !Ref LoadBalancerTwoENI
           DeviceIndex: 0
@@ -284,7 +309,7 @@ Resources:
           git clone https://github.com/mcasperson/TomcatHA.git
           cd TomcatHA
           curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_worker1_ip=${TomcatOneENI.PrimaryPrivateIpAddress} FACTER_worker2_ip=${TomcatTwoENI.PrimaryPrivateIpAddress} bash -s apachelb.pp
-          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_loadbalancer_name=loadbalancer2 FACTER_loadbalancer_priority=100 FACTER_keepalive_pass=${KeepAlivePassword} FACTER_loadbalancer_ip=${LoadBalancerTwoENI.PrimaryPrivateIpAddress} FACTER_other_loadbalancer_ip=${LoadBalancerOneENI.PrimaryPrivateIpAddress} bash -s keepalived.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_loadbalancer_name=loadbalancer2 FACTER_loadbalancer_priority=100 FACTER_keepalive_pass=${KeepAlivePassword} FACTER_loadbalancer_ip=${LoadBalancerTwoENI.PrimaryPrivateIpAddress} FACTER_other_loadbalancer_ip=${LoadBalancerOneENI.PrimaryPrivateIpAddress} FACTER_lb1_dns=ip-10-0-0-20.us-east-1.compute.internal FACTER_lb1_dns=ip-10-0-0-21.us-east-1.compute.internal FACTER_eip_allocation=${WebElasticIp.AllocationId} bash -s keepalived.pp
   WebElasticIp:
     Type: AWS::EC2::EIP
     Properties:
