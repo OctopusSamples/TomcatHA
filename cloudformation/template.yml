@@ -13,6 +13,8 @@ Parameters:
   AMI:
     Type: String
     Default: ami-07ebfd5b3428b6f4d
+  KeepAlivePassword:
+    Type: String
   PostgresMasterPassword:
     Type: String
     Description: The password for the master user
@@ -251,6 +253,38 @@ Resources:
           git clone https://github.com/mcasperson/TomcatHA.git
           cd TomcatHA
           curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_worker1_ip=10.0.0.10 FACTER_worker2_ip=10.0.0.11 bash -s apachelb.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_loadbalancer_name=loadbalancer1 FACTER_loadbalancer_priority=101 FACTER_keepalive_pass=${KeepAlivePassword} FACTER_loadbalancer_ip=${LoadBalancerOneENI.PrivateIpAddress} FACTER_other_loadbalancer_ip=${LoadBalancerTwoENI.PrivateIpAddress} bash -s keepalived.pp
+  LoadBalancerTwoENI:
+    Type: AWS::EC2::NetworkInterface
+    Properties:
+      Description: Tomcat 1 network interface
+      SourceDestCheck: 'false'
+      GroupSet:
+        - Ref: LoadBalancerSecurityGroup
+      SubnetId: !Ref SubnetA
+      PrivateIpAddress: 10.0.0.20
+  LoadBalancerTwo:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      NetworkInterfaces:
+        - NetworkInterfaceId: !Ref LoadBalancerTwoENI
+          DeviceIndex: 0
+      ImageId: !Ref AMI
+      InstanceType:
+        Ref: InstanceTypeParameter
+      KeyName: !Ref KeyPair
+      Tags:
+        -
+          Key: Name
+          Value: "Apache2 Load Balancer 2"
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -x
+          sudo apt-get install git -y
+          git clone https://github.com/mcasperson/TomcatHA.git
+          cd TomcatHA
+          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_worker1_ip=10.0.0.10 FACTER_worker2_ip=10.0.0.11 bash -s apachelb.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusDeploy/OctopusGuides/master/install.sh | FACTER_loadbalancer_name=loadbalancer2 FACTER_loadbalancer_priority=100 FACTER_keepalive_pass=${KeepAlivePassword} FACTER_loadbalancer_ip=${LoadBalancerTwoENI.PrivateIpAddress} FACTER_other_loadbalancer_ip=${LoadBalancerOneENI.PrivateIpAddress} bash -s keepalived.pp
   WebElasticIp:
     Type: AWS::EC2::EIP
     Properties:
