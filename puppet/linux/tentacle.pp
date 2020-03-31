@@ -40,3 +40,30 @@ apt::key { 'octopus-repository':
 #   command   => "/root/addtentacle.sh",
 #   logoutput => true
 # }
+
+file { '/root/addpwsh.sh':
+  ensure  => 'file',
+  owner   => 'root',
+  group   => 'root',
+  mode    => '0755',
+  content => @("EOT")
+    # Download the Microsoft repository GPG keys
+    wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb
+
+    # Register the Microsoft repository GPG keys
+    sudo dpkg -i packages-microsoft-prod.deb
+
+    # Update the list of products
+    sudo apt-get update
+
+    # Enable the "universe" repositories
+    sudo add-apt-repository universe
+
+    # Install PowerShell
+    sudo apt-get install -y powershell
+    | EOT
+}
+-> exec { 'Add Powershell':
+  command   => "/root/addpwsh.sh",
+  logoutput => true
+}
