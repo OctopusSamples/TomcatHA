@@ -20,7 +20,7 @@ file { '/opt/augapache':
     set /files/etc/apache2/sites-enabled/000-default.conf/VirtualHost/*[self::directive="SSLCertificateFile"]/arg "/path/to/octopus_tech.crt"
     set /files/etc/apache2/sites-enabled/000-default.conf/VirtualHost/directive[last()+1] "SSLCertificateKeyFile"
     set /files/etc/apache2/sites-enabled/000-default.conf/VirtualHost/*[self::directive="SSLCertificateKeyFile"]/arg "/path/to/octopus_tech.key"
-    set /files/etc/apache2/sites-enabled/000-default.conf/VirtualHost/directive[last()+1] "SSLCertificateKeyFile"
+    set /files/etc/apache2/sites-enabled/000-default.conf/VirtualHost/directive[last()+1] "SSLCertificateChainFile"
     set /files/etc/apache2/sites-enabled/000-default.conf/VirtualHost/*[self::directive="SSLCertificateChainFile"]/arg "/path/to/octopus_tech_bundle.pem"
     print /files/etc/apache2/sites-enabled/000-default.conf
     save
