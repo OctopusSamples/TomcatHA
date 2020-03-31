@@ -57,6 +57,24 @@ package { $apache_server:
     | EOT
 }
 
+file { '/opt/augapache':
+  ensure  => 'file',
+  owner   => 'root',
+  group   => 'root',
+  mode    => '0755',
+  content => @(EOT)
+    #!/usr/bin/augtool -Af
+    set /augeas/load/Httpd/lens Httpd.lns
+    set /augeas/load/Httpd/incl /etc/apache2/sites-enabled/000-default.conf
+    load
+    print /files/etc/apache2/sites-enabled/000-default.conf
+    set /files/etc/apache2/sites-enabled/000-default.conf/VirtualHost/directive[last()+1] "SSLEngine"
+    set /files/etc/apache2/sites-enabled/000-default.conf/VirtualHost/*[self::directive="SSLEngine"]/arg "on"
+    print /files/etc/apache2/sites-enabled/000-default.conf
+    save
+    | EOT
+}
+
 service {'apache2':
   ensure => running
 }
