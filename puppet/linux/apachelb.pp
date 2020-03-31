@@ -3,6 +3,10 @@ $apache_server = $::operatingsystem ? {
   default => 'httpd',
 }
 
+package { 'augeas-tools':
+  ensure => installed
+}
+
 package { $apache_server:
   ensure => installed
 }
@@ -45,6 +49,10 @@ package { $apache_server:
       ErrorLog ${APACHE_LOG_DIR}/error.log
       CustomLog ${APACHE_LOG_DIR}/access.log combined
       JkMount /* loadbalancer
+      SSLEngine on
+      SSLCertificateFile /path/to/octopus_tech.crt
+      SSLCertificateKeyFile /path/to/octopus_tech.key
+      SSLCertificateChainFile /path/to/octopus_tech_bundle.pem
     </VirtualHost>
     | EOT
 }
