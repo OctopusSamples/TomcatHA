@@ -184,6 +184,10 @@ Resources:
           FromPort: '8443'
           ToPort: '8443'
           CidrIp: !Sub '0.0.0.0/0'
+        - IpProtocol: tcp
+          FromPort: '10933'
+          ToPort: '10933'
+          CidrIp: !Sub '0.0.0.0/0'
   TomcatSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -205,6 +209,10 @@ Resources:
         - IpProtocol: tcp
           FromPort: '8443'
           ToPort: '8443'
+          CidrIp: !Sub '0.0.0.0/0'
+        - IpProtocol: tcp
+          FromPort: '10933'
+          ToPort: '10933'
           CidrIp: !Sub '0.0.0.0/0'
   TomcatOneENI:
     Type: AWS::EC2::NetworkInterface
