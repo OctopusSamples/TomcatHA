@@ -16,10 +16,10 @@ package { $apache_server:
   mode    => '0755',
   notify  => Service['apache2'],
   content => @("EOT")
-    # Define 1 real worker using ajp13
+    # All traffic is directed to the load balancer
     worker.list=loadbalancer
 
-    # Set properties for worker (ajp13)
+    # Set properties for workers (ajp13)
     worker.worker1.type=ajp13
     worker.worker1.host=$worker1_ip
     worker.worker1.port=8009
