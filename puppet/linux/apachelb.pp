@@ -48,7 +48,7 @@ package { $apache_server:
     </VirtualHost>
     | EOT
 }
--> exec { 'Add Tentacle':
+-> exec { 'Enable SSL Mod':
   command   => "/usr/sbin/a2enmod ssl",
   logoutput => true,
   notify  => Service['apache2'],
