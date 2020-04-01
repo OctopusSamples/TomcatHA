@@ -4,6 +4,9 @@ package { 'keepalived':
 -> package { 'awscli':
   ensure => installed
 }
+-> package { 'python':
+  ensure => installed
+}
 -> file { '/usr/lib/keepalived':
   ensure => 'directory'
 }
