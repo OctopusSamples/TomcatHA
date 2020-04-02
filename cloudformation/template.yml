@@ -214,7 +214,7 @@ Resources:
       Tags:
         -
           Key: Name
-          Value: "Tomcat 1"
+          Value: !Sub "Tomcat 1 ${OctopusEnvironment}"
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash -x
@@ -246,7 +246,7 @@ Resources:
       Tags:
         -
           Key: Name
-          Value: "Tomcat 2"
+          Value: !Sub "Tomcat 2 ${OctopusEnvironment}"
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash -x
@@ -278,7 +278,7 @@ Resources:
       Tags:
         -
           Key: Name
-          Value: "Apache2 Load Balancer 1"
+          Value: !Sub "Apache2 Load Balancer 1 ${OctopusEnvironment}"
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash -x
@@ -311,7 +311,7 @@ Resources:
       Tags:
         -
           Key: Name
-          Value: "Apache2 Load Balancer 2"
+          Value: !Sub "Apache2 Load Balancer 2 ${OctopusEnvironment}"
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash -x
