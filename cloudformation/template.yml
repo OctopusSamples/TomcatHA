@@ -130,13 +130,13 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: !Sub 'PostgresSQL Security Group'
-      GroupDescription: Security Group which grants anyone access to Postgres
+      GroupDescription: Security Group granting access to the tomcat instances
       VpcId: !Ref VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 5432
           ToPort: 5432
-          CidrIp: '0.0.0.0/0'
+          SourceSecurityGroupId: !Ref TomcatSecurityGroup
 
   PostgresSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
