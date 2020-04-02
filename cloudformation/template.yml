@@ -226,7 +226,7 @@ Resources:
           cd TomcatHA
           curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_postgres_user=postgres FACTER_postgres_pass=${PostgresMasterPassword} FACTER_postgres_server=${Postgres.Endpoint.Address} bash -s postgres.pp
           curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_postgres_user=postgres FACTER_postgres_pass=${PostgresMasterPassword} FACTER_postgres_server=${Postgres.Endpoint.Address} FACTER_tomcat_name=worker1 FACTER_tomcat_password=${TomcatPassword} bash -s tomcat.pp
-          curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_tentacle_name=tomcat1-${OctopusEnvironment} FACTER_octopus_role=tomcat FACTER_octopus_environment=${OctopusEnvironment} FACTER_octopus_server=${OctopusServer} "FACTER_octopus_space=${OctopusSpace}" FACTER_octopus_api_key=${OctopusAPIKey} bash -s tentacle.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_tentacle_name="tomcat1-${OctopusEnvironment}" FACTER_octopus_role=tomcat FACTER_octopus_environment=${OctopusEnvironment} FACTER_octopus_server=${OctopusServer} FACTER_octopus_space="${OctopusSpace}" FACTER_octopus_api_key=${OctopusAPIKey} bash -s tentacle.pp
   TomcatTwoENI:
     Type: AWS::EC2::NetworkInterface
     Properties:
@@ -257,7 +257,7 @@ Resources:
           git clone https://github.com/mcasperson/TomcatHA.git
           cd TomcatHA
           curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_postgres_user=postgres FACTER_postgres_pass=${PostgresMasterPassword} FACTER_postgres_server=${Postgres.Endpoint.Address} FACTER_tomcat_name=worker2 FACTER_tomcat_password=${TomcatPassword} bash -s tomcat.pp
-          curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_tentacle_name=tomcat2-${OctopusEnvironment} FACTER_octopus_role=tomcat FACTER_octopus_environment=${OctopusEnvironment} FACTER_octopus_server=${OctopusServer} "FACTER_octopus_space=${OctopusSpace}" FACTER_octopus_api_key=${OctopusAPIKey}  bash -s tentacle.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_tentacle_name=tomcat2-${OctopusEnvironment} FACTER_octopus_role=tomcat FACTER_octopus_environment=${OctopusEnvironment} FACTER_octopus_server=${OctopusServer} FACTER_octopus_space="${OctopusSpace}" FACTER_octopus_api_key=${OctopusAPIKey}  bash -s tentacle.pp
   LoadBalancerOneENI:
     Type: AWS::EC2::NetworkInterface
     Properties:
@@ -290,7 +290,7 @@ Resources:
           cd TomcatHA
           curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_worker1_ip=${TomcatOneENI.PrimaryPrivateIpAddress} FACTER_worker2_ip=${TomcatTwoENI.PrimaryPrivateIpAddress} bash -s apachelb.pp
           curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_loadbalancer_name=loadbalancer1 FACTER_loadbalancer_priority=101 FACTER_keepalive_pass=${KeepAlivePassword} FACTER_loadbalancer_ip=${LoadBalancer1IP} FACTER_other_loadbalancer_ip=${LoadBalancer2IP} FACTER_lb1_dns=ip-10-0-0-20.ec2.internal FACTER_lb2_dns=ip-10-0-0-21.ec2.internal FACTER_eip_allocation=${WebElasticIp.AllocationId} bash -s keepalived.pp
-          curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_tentacle_name=loadbalancer1-${OctopusEnvironment} FACTER_octopus_role=loadbalancer FACTER_octopus_environment=${OctopusEnvironment} FACTER_octopus_server=${OctopusServer} "FACTER_octopus_space=${OctopusSpace}" FACTER_octopus_api_key=${OctopusAPIKey}  bash -s tentacle.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_tentacle_name=loadbalancer1-${OctopusEnvironment} FACTER_octopus_role=loadbalancer FACTER_octopus_environment=${OctopusEnvironment} FACTER_octopus_server=${OctopusServer} FACTER_octopus_space="${OctopusSpace}" FACTER_octopus_api_key=${OctopusAPIKey}  bash -s tentacle.pp
   LoadBalancerTwoENI:
     Type: AWS::EC2::NetworkInterface
     Properties:
@@ -323,7 +323,7 @@ Resources:
           cd TomcatHA
           curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_worker1_ip=${TomcatOneENI.PrimaryPrivateIpAddress} FACTER_worker2_ip=${TomcatTwoENI.PrimaryPrivateIpAddress} bash -s apachelb.pp
           curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_loadbalancer_name=loadbalancer2 FACTER_loadbalancer_priority=100 FACTER_keepalive_pass=${KeepAlivePassword} FACTER_loadbalancer_ip=${LoadBalancer2IP} FACTER_other_loadbalancer_ip=${LoadBalancer1IP} FACTER_lb1_dns=ip-10-0-0-20.ec2.internal FACTER_lb2_dns=ip-10-0-0-21.ec2.internal FACTER_eip_allocation=${WebElasticIp.AllocationId} bash -s keepalived.pp
-          curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_tentacle_name=loadbalancer2-${OctopusEnvironment} FACTER_octopus_role=loadbalancer FACTER_octopus_environment=${OctopusEnvironment} FACTER_octopus_server=${OctopusServer} "FACTER_octopus_space=${OctopusSpace}" FACTER_octopus_api_key=${OctopusAPIKey}  bash -s tentacle.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_tentacle_name=loadbalancer2-${OctopusEnvironment} FACTER_octopus_role=loadbalancer FACTER_octopus_environment=${OctopusEnvironment} FACTER_octopus_server=${OctopusServer} FACTER_octopus_space="${OctopusSpace}" FACTER_octopus_api_key=${OctopusAPIKey}  bash -s tentacle.pp
   WebElasticIp:
     Type: AWS::EC2::EIP
     Properties:
