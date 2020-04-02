@@ -244,7 +244,7 @@ Resources:
           git clone https://github.com/mcasperson/TomcatHA.git
           cd TomcatHA
           curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_postgres_user=postgres FACTER_postgres_pass=${PostgresMasterPassword} FACTER_postgres_server=${Postgres.Endpoint.Address} bash -s postgres.pp
-          curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_postgres_user=postgres FACTER_postgres_pass=${PostgresMasterPassword} FACTER_postgres_server=${Postgres.Endpoint.Address} FACTER_tomcat_name=worker1 bash -s tomcat.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_postgres_user=postgres FACTER_postgres_pass=${PostgresMasterPassword} FACTER_postgres_server=${Postgres.Endpoint.Address} FACTER_tomcat_name=worker1 FACTER_tomcat_password=${TomcatPassword} bash -s tomcat.pp
           curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | bash -s tentacle.pp
   TomcatTwoENI:
     Type: AWS::EC2::NetworkInterface
@@ -275,7 +275,7 @@ Resources:
           sudo apt-get install git -y
           git clone https://github.com/mcasperson/TomcatHA.git
           cd TomcatHA
-          curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_postgres_user=postgres FACTER_postgres_pass=${PostgresMasterPassword} FACTER_postgres_server=${Postgres.Endpoint.Address} FACTER_tomcat_name=worker2 bash -s tomcat.pp
+          curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | FACTER_postgres_user=postgres FACTER_postgres_pass=${PostgresMasterPassword} FACTER_postgres_server=${Postgres.Endpoint.Address} FACTER_tomcat_name=worker2 FACTER_tomcat_password=${TomcatPassword} bash -s tomcat.pp
           curl -s -L https://raw.githubusercontent.com/OctopusSamples/TomcatHA/master/install.sh | bash -s tentacle.pp
   LoadBalancerOneENI:
     Type: AWS::EC2::NetworkInterface
@@ -355,12 +355,33 @@ Outputs:
   SubnetAID:
     Value: !Ref SubnetA
     Description: Subnet A ID
-  PublicIp:
+  SubnetBID:
+    Value: !Ref SubnetB
+    Description: Subnet B ID
+  LoadBalancerOnePublicIp:
     Value:
       Fn::GetAtt:
         - LoadBalancerOne
         - PublicIp
-    Description: Server's PublicIp Address
+    Description: Load Balancer One PublicIp Address
+  LoadBalancerTwoPublicIp:
+    Value:
+      Fn::GetAtt:
+        - LoadBalancerTwo
+        - PublicIp
+    Description: Load Balancer Two PublicIp Address
+  TomcatOnePublicIp:
+    Value:
+      Fn::GetAtt:
+        - LoadBalancerOne
+        - PublicIp
+    Description: Load Balancer One PublicIp Address
+  TomcatTwoPublicIp:
+    Value:
+      Fn::GetAtt:
+        - LoadBalancerTwo
+        - PublicIp
+    Description: Load Balancer Two PublicIp Address
   EndpointAddress:
     Description: Connection endpoint of the database
     Value: !GetAtt Postgres.Endpoint.Address

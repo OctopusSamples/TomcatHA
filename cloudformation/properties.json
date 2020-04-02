@@ -6,5 +6,9 @@
   {
     "ParameterKey": "PostgresMasterPassword",
     "ParameterValue": "#{PostgresMasterPassword}"
+  },
+  {
+    "ParameterKey": "TomcatPassword",
+    "ParameterValue": "#{TomcatPassword}"
   }
 ]
