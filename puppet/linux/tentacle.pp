@@ -34,6 +34,7 @@ apt::key { 'octopus-repository':
     sudo /opt/octopus/tentacle/Tentacle configure --instance "Tentacle" --app "/home/Octopus/Applications" --noListen "True" --reset-trust
     sudo /opt/octopus/tentacle/Tentacle register-with --force --instance "Tentacle" --server "$octopus_server" --name "$tentacle_name" --comms-style "TentacleActive" --server-comms-port "10943" --apiKey "$octopus_api_key" --space "$octopus_space" --environment "$octopus_environment" --role "$octopus_role"
     sudo /opt/octopus/tentacle/Tentacle service --install --start --instance "Tentacle"
+    exit 0
     | EOT
 }
 -> exec { 'Add Tentacle':
@@ -61,6 +62,7 @@ file { '/root/addpwsh.sh':
 
     # Install PowerShell
     sudo apt-get install -y powershell
+    exit 0
     | EOT
 }
 -> exec { 'Add Powershell':

@@ -17,9 +17,12 @@ sudo /opt/puppetlabs/bin/puppet module install puppet/archive
 sudo /opt/puppetlabs/bin/puppet module install puppetlabs/inifile
 sudo /opt/puppetlabs/bin/puppet module install puppetlabs/tomcat
 
+# Disable retries. Set this to a higher number to attempt to catch issues like failed downloads.
+RETRIES=1
+
 for var in "$@"
 do
-    for i in {1..2}
+    for i in {1..${RETRIES}}
     do
       # sudo -E is required to get the FACTER_ environment variables
       sudo -E /opt/puppetlabs/bin/puppet apply $DIR/puppet/linux/$var --detailed-exitcodes
