@@ -10,5 +10,21 @@
   {
     "ParameterKey": "TomcatPassword",
     "ParameterValue": "#{TomcatPassword}"
+  },
+  {
+    "ParameterKey": "OctopusServer",
+    "ParameterValue": "#{OctopusServer}"
+  },
+  {
+    "ParameterKey": "OctopusAPIKey",
+    "ParameterValue": "#{OctopusAPIKey}"
+  },
+  {
+    "ParameterKey": "OctopusSpace",
+    "ParameterValue": "#{OctopusSpace}"
+  },
+  {
+    "ParameterKey": "OctopusEnvironment",
+    "ParameterValue": "#{Octopus.Environment.Name}"
   }
 ]
