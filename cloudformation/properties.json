@@ -1,0 +1,10 @@
+[
+  {
+    "ParameterKey": "KeepAlivePassword",
+    "ParameterValue": "#{KeepAlivePassword}"
+  },
+  {
+    "ParameterKey": "PostgresMasterPassword",
+    "ParameterValue": "#{PostgresMasterPassword}"
+  }
+]
