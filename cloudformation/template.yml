@@ -23,6 +23,8 @@ Parameters:
     Type: String
   OctopusEnvironment:
     Type: String
+  TomcatPassword:
+    Type: String
   LoadBalancer1IP:
     Type: String
     Default: 10.0.0.20
