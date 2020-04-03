@@ -5,7 +5,7 @@ Parameters:
     Default: DukeLegion
   InstanceTypeParameter:
     Type: String
-    Default: t3.nano
+    Default: t3.micro
     AllowedValues:
       - t3.small
       - t3.micro
