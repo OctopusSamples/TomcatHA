@@ -37,6 +37,17 @@ apt::key { 'octopus-repository':
     exit 0
     | EOT
 }
+-> file { '/root/removetentacle.sh':
+  ensure  => 'file',
+  owner   => 'root',
+  group   => 'root',
+  mode    => '0755',
+  content => @("EOT")
+    sudo /opt/octopus/tentacle/Tentacle service --instance Tentacle --stop --uninstall"
+    sudo /opt/octopus/tentacle/Tentacle delete-instance
+    exit 0
+    | EOT
+}
 -> exec { 'Add Tentacle':
   command   => "/root/addtentacle.sh",
   logoutput => true
