@@ -5,10 +5,12 @@ Parameters:
     Default: DukeLegion
   InstanceTypeParameter:
     Type: String
-    Default: t3.micro
+    Default: t3a.micro
     AllowedValues:
       - t3.small
+      - t3a.small
       - t3.micro
+      - t3a.micro
       - t3.nano
     Description: Enter instance size.
   AMI:
